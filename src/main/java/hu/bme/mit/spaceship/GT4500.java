@@ -16,7 +16,6 @@ public class GT4500 implements SpaceShip {
   }
 
   public boolean fireLaser(FiringMode firingMode) {
-    // TODO not implemented yet
     return false;
   }
 
@@ -38,51 +37,39 @@ public class GT4500 implements SpaceShip {
 
     boolean firingSuccess = false;
 
-    switch (firingMode) {
-      case SINGLE:
+    if (firingMode == FiringMode.SINGLE) {
         if (wasPrimaryFiredLast) {
           // try to fire the secondary first
           if (! secondaryTorpedoStore.isEmpty()) {
-            firingSuccess = secondaryTorpedoStore.fire(1);
-            wasPrimaryFiredLast = false;
+            wasPrimaryFiredLast = secondaryFire();
           }
-          else {
-            // although primary was fired last time, but the secondary is empty
-            // thus try to fire primary again
-            if (! primaryTorpedoStore.isEmpty()) {
-              firingSuccess = primaryTorpedoStore.fire(1);
-              wasPrimaryFiredLast = true;
+          else if (! primaryTorpedoStore.isEmpty()) {
+              wasPrimaryFiredLast = primaryFire();
             }
-
-            // if both of the stores are empty, nothing can be done, return failure
-          }
         }
         else {
           // try to fire the primary first
           if (! primaryTorpedoStore.isEmpty()) {
-            firingSuccess = primaryTorpedoStore.fire(1);
-            wasPrimaryFiredLast = true;
+            wasPrimaryFiredLast = primaryFire();
           }
-          else {
-            // although secondary was fired last time, but primary is empty
-            // thus try to fire secondary again
-            if (! secondaryTorpedoStore.isEmpty()) {
-              firingSuccess = secondaryTorpedoStore.fire(1);
-              wasPrimaryFiredLast = false;
+          else if (! secondaryTorpedoStore.isEmpty()) {
+              wasPrimaryFiredLast = secondaryFire();
             }
-
-            // if both of the stores are empty, nothing can be done, return failure
-          }
         }
-        break;
-
-      case ALL:
-        
+     }
+      else if( firingMode == FiringMode.ALL){
 	firingSuccess = true;
-        break;
     }
-
     return firingSuccess;
   }
 
+	public boolean primaryFire(){
+		firingSuccess = primaryTorpedoStore.fire(1);
+		return true;
+	}
+
+	public boolean secondaryFire(){
+		firingSuccess = secondaryTorpedoStore.fire(1);
+		return false;
+	}
 }

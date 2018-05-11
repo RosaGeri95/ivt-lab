@@ -15,6 +15,11 @@ public class GT4500 implements SpaceShip {
     this.secondaryTorpedoStore = new TorpedoStore(10);
   }
 
+  public GT4500( TorpedoStore primaryTorpedoStore, TorpedoStore secondaryTorpedoStore) {
+    this.primaryTorpedoStore = primaryTorpedoStore;
+    this.secondaryTorpedoStore = secondaryTorpedoStore;
+  }
+
   public boolean fireLaser(FiringMode firingMode) {
     return false;
   }
@@ -41,29 +46,41 @@ public class GT4500 implements SpaceShip {
         if (wasPrimaryFiredLast) {
           // try to fire the secondary first
           if (! secondaryTorpedoStore.isEmpty()) {
-		firingSuccess = secondaryTorpedoStore.fire(1);
+		        firingSuccess = secondaryTorpedoStore.fire(1);
             	wasPrimaryFiredLast = false;
           }
           else if (! primaryTorpedoStore.isEmpty()) {
-		firingSuccess = primaryTorpedoStore.fire(1);
+		        firingSuccess = primaryTorpedoStore.fire(1);
               	wasPrimaryFiredLast = true;
             }
         }
         else {
           // try to fire the primary first
           if (! primaryTorpedoStore.isEmpty()) {
-		firingSuccess = primaryTorpedoStore.fire(1);
+		        firingSuccess = primaryTorpedoStore.fire(1);
             	wasPrimaryFiredLast = true;
           }
           else if (! secondaryTorpedoStore.isEmpty()) {
-		firingSuccess = secondaryTorpedoStore.fire(1);
+		        firingSuccess = secondaryTorpedoStore.fire(1);
               	wasPrimaryFiredLast = false;
             }
         }
      }
       else if( firingMode == FiringMode.ALL){
-	firingSuccess = true;
+        if(!primaryTorpedoStore.isEmpty() || !secondaryTorpedoStore.isEmpty())
+        {
+            primaryTorpedoStore.fire(primaryTorpedoStore.getTorpedoCount());
+            secondaryTorpedoStore.fire(secondaryTorpedoStore.getTorpedoCount());
+	        firingSuccess = true;
+        }
+        else {
+            return false;
+        }
     }
     return firingSuccess;
+  }
+
+  public boolean getWasPrimaryFiredLast(){
+      return wasPrimaryFiredLast;
   }
 }

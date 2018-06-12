@@ -1,3 +1,6 @@
+Az Integrációs és Ellenőrzési Technikák című tárgy (próba)projekte, amelyen többek között a folytonos integrációt, statikus analízist illetve a unit tesztelést gyakoroltuk.
+
+
 Added so travis build can be started. Branch B change!
 
 # IVT Spaceship
